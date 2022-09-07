@@ -8,42 +8,45 @@
         <h2 class="font-normal mb-6 text-3xl text-white">
           Sign In to Your Account
         </h2>
-        <div class="mb-6">
-          <div class="mb-4">
-            <label class="font-normal text-lg text-white block mb-3"
-              >Email Address</label
-            >
-            <input
-              type="email"
-              class="auth-form focus:outline-none focus:bg-purple-hover focus:shadow-outline focus:border-purple-hover-stroke focus:text-gray-100"
-              placeholder="Write your email address here"
-              value="julia.keeva@gmail.com"
-            />
+        <form @submit.prevent="userLogin">
+          <div class="mb-6">
+            <div class="mb-4">
+              <label class="font-normal text-lg text-white block mb-3"
+                >Email Address</label
+              >
+              <input
+                type="email"
+                v-model="login.email"
+                class="auth-form focus:outline-none focus:bg-purple-hover focus:shadow-outline focus:border-purple-hover-stroke focus:text-gray-100"
+                placeholder="Write your email address here"
+              />
+            </div>
           </div>
-        </div>
-        <div class="mb-6">
-          <div class="mb-4">
-            <label class="font-normal text-lg text-white block mb-3"
-              >Password</label
-            >
-            <input
-              type="password"
-              class="auth-form focus:outline-none focus:bg-purple-hover focus:shadow-outline focus:border-purple-hover-stroke focus:text-gray-100"
-              placeholder="Write your password here"
-              value="nasigorenglimaribbu"
-            />
+          <div class="mb-6">
+            <div class="mb-4">
+              <label class="font-normal text-lg text-white block mb-3"
+                >Password</label
+              >
+              <input
+                @keyup.enter="userLogin"
+                type="password"
+                v-model="login.password"
+                class="auth-form focus:outline-none focus:bg-purple-hover focus:shadow-outline focus:border-purple-hover-stroke focus:text-gray-100"
+                placeholder="Write your password here"
+              />
+            </div>
           </div>
-        </div>
-        <div class="mb-6">
-          <div class="mb-4">
-            <button
-              @click="$router.push({ path: '/' })"
-              class="block w-full bg-orange-button hover:bg-green-button text-white font-semibold px-6 py-4 text-lg rounded-full"
-            >
-              Sign In
-            </button>
+          <div class="mb-6">
+            <div class="mb-4">
+              <button
+                @click="userLogin"
+                class="block w-full bg-orange-button hover:bg-green-button text-white font-semibold px-6 py-4 text-lg rounded-full"
+              >
+                Sign In
+              </button>
+            </div>
           </div>
-        </div>
+        </form>
         <div class="text-center">
           <p class="text-white text-md">
             Don't have account?
@@ -60,6 +63,25 @@
 <script>
 export default {
   layout: 'auth',
+  data() {
+    return {
+      login: {
+        email: '',
+        password: '',
+      },
+    }
+  },
+  methods: {
+    async userLogin() {
+      try {
+        let response = await this.$auth.loginWith('local', { data: this.login })
+        this.$auth.setUser(response.data.data)
+        console.log(response)
+      } catch (err) {
+        console.log(err)
+      }
+    },
+  },
 }
 </script>
 
